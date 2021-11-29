@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "./assets/images/logo.svg";
 // import robots from "./mockdata/robots.json";
 import Robot from "./components/Robot";
@@ -12,54 +12,67 @@ interface State {
   count: number;
 }
 
-class App extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      robotList: [],
-      count: 0,
+const App: React.FC<Props> = (props) => {
+  const [robotList, setRobotList] = useState<any>([]);
+  const [count, setCount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    document.title = `点击${count}次`;
+  }, [count]);
+
+  useEffect(() => {
+    // fetch("https://jsonplaceholder.typicode.com/users")
+    // .then((response) => response.json())
+    // .then((json) =>
+    //   setRobotList(json)
+    // );
+
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        const data = await response.json();
+        setRobotList(data);
+      } catch (error: any) {
+        setError(error.message);
+      }
+      setLoading(false);
     };
-  }
 
-  componentDidMount() {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((json) =>
-        this.setState({
-          robotList: json,
-        })
-      );
-  }
+    fetchData();
+  }, []);
 
-
-  render() {
-    return (
-      <div className={styles.app}>
-        <div className={styles.appHeader}>
-          <img src={logo} className={styles.appLogo} alt="logo" />
-          <h1>React Robots</h1>
-        </div>
-        <button
-          onClick={() => {
-            this.setState({
-              count: this.state.count + 1,
-            }, () => {
-              console.log("count: ", this.state.count);
-            });
-          }}
-        >
-          click
-        </button>
-        <span>count: {this.state.count}</span>
-        <ShoppingCart />
+  return (
+    <div className={styles.app}>
+      <div className={styles.appHeader}>
+        <img src={logo} className={styles.appLogo} alt="logo" />
+        <h1>React Robots</h1>
+      </div>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        click
+      </button>
+      <span>count: {count}</span>
+      <ShoppingCart />
+      {(!error || error!== '') && <div>网站出错：{error}</div>}
+      {!loading ? (
         <div className={styles.robotList}>
-          {this.state.robotList.map((r) => (
+          {robotList.map((r) => (
             <Robot id={r.id} name={r.name} email={r.email}></Robot>
           ))}
         </div>
-      </div>
-    );
-  }
-}
+      ) : (
+        <h2>加载中</h2>
+      )}
+    </div>
+  );
+};
 
 export default App;
