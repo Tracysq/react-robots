@@ -11,10 +11,17 @@ const defaultContextValue: AppStateValue = {
 };
 
 export const context = React.createContext(defaultContextValue);
+export const appSetStateContext = React.createContext<React.Dispatch<React.SetStateAction<AppStateValue>> | undefined>(undefined);
 
 // 高阶函数 HOC
 export const AppStateProvider: React.FC = (props) => {
   const [state, setState] = useState(defaultContextValue);
 
-  return <context.Provider value={state}>{props.children}</context.Provider>;
+  return (
+    <context.Provider value={state}>
+      <appSetStateContext.Provider value={setState}>
+        {props.children}
+      </appSetStateContext.Provider>
+    </context.Provider>
+  );
 };
