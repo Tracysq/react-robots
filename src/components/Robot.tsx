@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./Robot.module.css";
 import { context } from "../index";
 
@@ -9,19 +9,14 @@ interface RobotProps {
 }
 
 const Robot: React.FC<RobotProps> = ({ id, name, email }) => {
+  const value = useContext(context);
   return (
-    <context.Consumer>
-      {(value) => {
-        return (
-          <div className={styles.cardContainer}>
-            <img src={`https://robohash.org/${id}`} alt="robot" />
-            <h2>{name}</h2>
-            <p>{email}</p>
-            <p>作者：{value.username}</p>
-          </div>
-        );
-      }}
-    </context.Consumer>
+    <div className={styles.cardContainer}>
+      <img src={`https://robohash.org/${id}`} alt="robot" />
+      <h2>{name}</h2>
+      <p>{email}</p>
+      <p>作者：{value.username}</p>
+    </div>
   );
 };
 
