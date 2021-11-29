@@ -5,7 +5,9 @@ import Robot from "./components/Robot";
 import styles from "./App.module.css";
 import ShoppingCart from "./components/ShoppingCart";
 
-interface Props {}
+interface Props {
+  username: string
+}
 
 interface State {
   robotList: any[];
@@ -52,6 +54,7 @@ const App: React.FC<Props> = (props) => {
         <img src={logo} className={styles.appLogo} alt="logo" />
         <h1>React Robots</h1>
       </div>
+      <h2>{props.username}</h2>
       <button
         onClick={() => {
           setCount(count + 1);
