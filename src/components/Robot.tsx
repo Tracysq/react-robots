@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import styles from "./Robot.module.css";
-import { context } from "../index";
+import { context } from "../AppState";
 
 interface RobotProps {
   id: number;
